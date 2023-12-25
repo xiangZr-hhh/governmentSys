@@ -1,6 +1,8 @@
 package com.sys.controller;
 
-import com.sys.entity.RequestVo.AddUserRequest;
+import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ResponseResult;
+import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.RequestVo.LoginRequestVo;
 import com.sys.entity.RequestVo.UserFromDeptRequestVo;
 import com.sys.excption.BusinessException;
@@ -21,45 +23,56 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public BaseResponse login(@RequestBody LoginRequestVo loginRequestVo){
+    public ResponseResult login(@RequestBody LoginRequestVo loginRequestVo) {
 
 //        判断请求参数是否为空
-        if(loginRequestVo == null){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        if (loginRequestVo == null) {
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
         }
 
 //        请求登录
-        BaseResponse result = usersService.login(loginRequestVo);
+        ResponseResult result = usersService.login(loginRequestVo);
         return result;
     }
 
     @PostMapping("/getUserList/deptId")
-    public BaseResponse getUserFromDept (@RequestBody UserFromDeptRequestVo userFromDeptRequestVo){
+    public ResponseResult getUserFromDept(@RequestBody UserFromDeptRequestVo userFromDeptRequestVo) {
 
         int deptId = userFromDeptRequestVo.getDeptId();
 //        判断参数是否为空
-        if(deptId < 0){
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        if (deptId < 0) {
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
         }
 
-        BaseResponse result = usersService.getUserFromDept(deptId);
+        ResponseResult result = usersService.getUserFromDept(deptId);
 
         return result;
     }
 
     @PostMapping("/addUser")
-    public BaseResponse addUser (@RequestBody AddUserRequest addUserRequest){
+    public ResponseResult addUser(@RequestBody UserVoRequest userVoRequest) {
 
 //        判断参数是否为空
-        if(addUserRequest == null){
-            throw  new BusinessException(ErrorCode.NULL_ERROR);
+        if (userVoRequest == null) {
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
         }
 
-        BaseResponse result = usersService.addUser(addUserRequest);
+        ResponseResult result = usersService.addUser(userVoRequest);
 
         return result;
     }
 
+    @PostMapping("/editUser")
+    public ResponseResult editUser(@RequestBody UserVoRequest userVoRequest) {
+//        判断参数是否为空
+        if (userVoRequest == null) {
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+        }
+
+        ResponseResult result = usersService.editUser(userVoRequest);
+
+        return result;
+    }
 
 
 }

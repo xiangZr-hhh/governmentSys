@@ -10,7 +10,6 @@ public enum AppHttpCodeEnum {
     SYSTEM_EXCEPTION(405,"系统内部异常"),
     FILE_EMPTY(409,"文件为空");
 
-
     int code;
     String msg;
 

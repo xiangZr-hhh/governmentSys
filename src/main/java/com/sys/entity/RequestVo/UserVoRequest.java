@@ -8,7 +8,7 @@ import lombok.Data;
         addUser的请求数据封装Vo类
 */
 @Data
-public class AddUserRequest {
+public class UserVoRequest {
 
     private String name;
 

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sys.common.AppHttpCodeEnum;
 import com.sys.common.ResponseResult;
-import com.sys.entity.RequestVo.AddUserRequest;
+import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.RequestVo.LoginRequestVo;
 import com.sys.entity.ResponseVo.LoginResponseVo;
 import com.sys.entity.ResponseVo.UserVo;
@@ -42,11 +42,11 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     public ResponseResult login(LoginRequestVo loginRequestVo) {
 
 //        获取参数
-        String jobNumber = loginRequestVo.getUsername();
+        String username = loginRequestVo.getUsername();
         String password = loginRequestVo.getPassword();
 
 //        判断参数是否为空
-        if(jobNumber == null||jobNumber.equals("")){
+        if(username == null||username.equals("")){
             throw new BusinessException(AppHttpCodeEnum.JSON_ERROR,"username参数为空");
         }
         if(password == null||password.equals("")){
@@ -55,7 +55,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
 //      先验证用户是否存在
         LambdaQueryWrapper<Users> usersWrapper = new LambdaQueryWrapper<>();
-        usersWrapper.eq(Users::getJobNumber,jobNumber);
+        usersWrapper.eq(Users::getUsername,username);
         Users user = usersMapper.selectOne(usersWrapper);
         if(user == null){
             throw  new BusinessException(AppHttpCodeEnum.SEARACH_NULL,"用户名错误");
@@ -105,32 +105,48 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
     @Override
-    public ResponseResult addUser(AddUserRequest addUserRequest) {
+    public ResponseResult addUser(UserVoRequest userVoRequest) {
 
-        if(addUserRequest.getRole().equals("")){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"role参数为空");
-        }
+//        判断userVo参数是否为空
+        judgeUserVo(userVoRequest);
 
-        if(addUserRequest.getPhone().equals("")){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"phone参数为空");
-        }
+        Users user = new Users(userVoRequest.getName(), userVoRequest.getPhone(), userVoRequest.getDeptId(), userVoRequest.getRole());
 
-        if(addUserRequest.getName().equals("")){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"name参数为空");
-        }
-
-        if(addUserRequest.getDeptId() < 0){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"deptId为空");
-        }
-
-        Users user = new Users(addUserRequest.getName(),addUserRequest.getPhone(), addUserRequest.getDeptId(),addUserRequest.getRole());
-
-        if(!addUserRequest.getSex().equals("")){
-            user.setSex(addUserRequest.getSex());
+        if(!userVoRequest.getSex().equals("")){
+            user.setSex(userVoRequest.getSex());
         }
 
         usersMapper.insert(user);
         return ResponseResult.okResult();
 
+    }
+
+    @Override
+    public ResponseResult editUser(UserVoRequest userVoRequest) {
+
+//        判断userVo参数是否为空
+        judgeUserVo(userVoRequest);
+    }
+
+
+//    判断用户参数
+    public boolean judgeUserVo(UserVoRequest userVoRequest){
+        if(userVoRequest.getRole().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"role参数为空");
+        }
+
+        if(userVoRequest.getPhone().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"phone参数为空");
+        }
+
+        if(userVoRequest.getName().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"name参数为空");
+        }
+
+        if(userVoRequest.getDeptId() < 0){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"deptId为空");
+        }
+
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 package com.sys.service;
 
 import com.sys.common.ResponseResult;
-import com.sys.entity.RequestVo.AddUserRequest;
+import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sys.entity.RequestVo.LoginRequestVo;
@@ -19,6 +19,8 @@ public interface UsersService extends IService<Users> {
 
     ResponseResult getUserFromDept(Integer deptId);
 
-    ResponseResult addUser(AddUserRequest addUserRequest);
+    ResponseResult addUser(UserVoRequest userVoRequest);
+
+    ResponseResult editUser(UserVoRequest userVoRequest);
 }
 
