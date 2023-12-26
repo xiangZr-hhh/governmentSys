@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sys.common.AppHttpCodeEnum;
 import com.sys.common.ResponseResult;
+import com.sys.constant.UserRoleConstant;
+import com.sys.entity.RequestVo.EditUserRequestVo;
 import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.RequestVo.LoginRequestVo;
 import com.sys.entity.ResponseVo.LoginResponseVo;
@@ -108,28 +110,86 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     public ResponseResult addUser(UserVoRequest userVoRequest) {
 
 //        判断userVo参数是否为空
-        judgeUserVo(userVoRequest);
+        if(judgeUserVo(userVoRequest)) {
 
-        Users user = new Users(userVoRequest.getName(), userVoRequest.getPhone(), userVoRequest.getDeptId(), userVoRequest.getRole());
+//            检测用户名是否重复
+            LambdaQueryWrapper<Users> userWrapper = new LambdaQueryWrapper<>();
+            userWrapper.eq(Users::getUsername,userVoRequest.getName());
+            List<Users> checkResult = usersMapper.selectList(userWrapper);
+            if(checkResult.size() > 0){
+                throw new BusinessException(AppHttpCodeEnum.USERNAME_DIPLICATE);
+            }
 
-        if(!userVoRequest.getSex().equals("")){
-            user.setSex(userVoRequest.getSex());
+//            创建对应实体类
+            Users user = new Users(userVoRequest.getName(), userVoRequest.getPhone(), userVoRequest.getDeptId(), userVoRequest.getRole());
+
+//            检测非必要参数sex是否添加
+            if (!userVoRequest.getSex().equals("")) {
+                user.setSex(userVoRequest.getSex());
+            }
+
+//            添加接口
+            usersMapper.insert(user);
+            return ResponseResult.okResult();
         }
 
-        usersMapper.insert(user);
-        return ResponseResult.okResult();
-
+        return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_EXCEPTION);
     }
 
+
+//    edituser接口业务层
     @Override
-    public ResponseResult editUser(UserVoRequest userVoRequest) {
+    public ResponseResult editUser(EditUserRequestVo editUserRequestVo) {
 
-//        判断userVo参数是否为空
-        judgeUserVo(userVoRequest);
+        if(judgeEditUser(editUserRequestVo)){
+
+//            根据userId查询数据
+            Users user = usersMapper.selectById(editUserRequestVo.getUserId());
+//            未找到则抛出异常
+            if(user == null){
+                throw new BusinessException(AppHttpCodeEnum.SEARACH_NULL);
+            }
+//            如果可选属性sex不为空
+            if(!editUserRequestVo.getSex().equals("")){
+                user.setSex(editUserRequestVo.getSex());
+            }
+            user.setPhone(editUserRequestVo.getPhone());
+            user.setUsername(editUserRequestVo.getName());
+            user.setRoleId(editUserRequestVo.getRole());
+
+            int result = usersMapper.updateById(user);
+            if(result != 0){
+                return ResponseResult.okResult();
+            }
+
+            return ResponseResult.errorResult(AppHttpCodeEnum.SEARACH_NULL);
+        }
+
+        return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_EXCEPTION);
     }
 
 
-//    判断用户参数
+//    根据id删除用户
+    @Override
+    public ResponseResult delUserById(int userId) {
+//        搜索该用户的实体类
+        Users users = usersMapper.selectById(userId);
+        if(users == null){
+            throw new BusinessException(AppHttpCodeEnum.SEARACH_NULL);
+        }
+//        修改其删除状态
+        users.setState(UserRoleConstant.USER_DEPT);
+        usersMapper.updateById(users);
+
+        return ResponseResult.okResult();
+    }
+
+
+
+
+
+
+//    判断添加用户接口参数
     public boolean judgeUserVo(UserVoRequest userVoRequest){
         if(userVoRequest.getRole().equals("")){
             throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"role参数为空");
@@ -143,10 +203,47 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"name参数为空");
         }
 
-        if(userVoRequest.getDeptId() < 0){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"deptId为空");
+        if(userVoRequest.getDeptId() <= 0){
+            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR,"deptId参数错误");
         }
 
         return true;
+    }
+
+
+//        判断editUserRequestVo参数是否为空
+    public boolean judgeEditUser(EditUserRequestVo editUserRequestVo){
+
+        if( editUserRequestVo.getName().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"phone参数为空");
+        }
+        if(editUserRequestVo.getRole().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"role参数为空");
+        }
+        if(editUserRequestVo.getPhone().equals("")){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL,"phone参数为空");
+        }
+        if(editUserRequestVo.getUserId() <= 0){
+            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR,"userId参数错误");
+        }
+
+        return true;
+    }
+
+//  根据id重置密码
+    @Override
+    public ResponseResult resetPwdById(int userId) {
+
+//        根据id获取对应用户实体类
+        Users user = usersMapper.selectById(userId);
+//        如果未找到则抛出异常
+        if(user == null){
+            throw new BusinessException(AppHttpCodeEnum.SEARACH_NULL);
+        }
+
+        user.setPassword("EC95256710DC067BB0C111B3CD619DBA14FADAC617A56EDE0883230B");
+        usersMapper.updateById(user);
+
+        return ResponseResult.okResult();
     }
 }

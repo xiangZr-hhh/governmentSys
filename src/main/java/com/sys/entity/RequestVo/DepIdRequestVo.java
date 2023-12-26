@@ -6,8 +6,7 @@ import lombok.Data;
         张睿相   Java
 */
 @Data
-public class UserFromDeptRequestVo {
+public class DepIdRequestVo {
 
     private int deptId;
-
 }

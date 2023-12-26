@@ -22,4 +22,10 @@ public interface UserRoleConstant {
     //    办事单位办事人员
     String OFFICE_STAFF = "5";
 
+    //    部门删除状态
+    String DELETE_DEPT = "1";
+
+    //    用户删除状态
+    String USER_DEPT = "1";
+
 }

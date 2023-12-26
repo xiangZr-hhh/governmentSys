@@ -1,6 +1,7 @@
 package com.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sys.common.ResponseResult;
 import com.sys.entity.Dept;
 
 
@@ -12,5 +13,11 @@ import com.sys.entity.Dept;
  */
 public interface DeptService extends IService<Dept> {
 
+    ResponseResult getDeptList();
+
+    ResponseResult addDept(String deptName);
+
+    //    删除部门
+    ResponseResult delDept(Integer deptId);
 }
 

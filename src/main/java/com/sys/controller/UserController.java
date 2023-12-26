@@ -2,15 +2,11 @@ package com.sys.controller;
 
 import com.sys.common.AppHttpCodeEnum;
 import com.sys.common.ResponseResult;
-import com.sys.entity.RequestVo.UserVoRequest;
-import com.sys.entity.RequestVo.LoginRequestVo;
-import com.sys.entity.RequestVo.UserFromDeptRequestVo;
+import com.sys.entity.RequestVo.*;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.UsersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /*
         张睿相   Java
@@ -63,16 +59,47 @@ public class UserController {
     }
 
     @PostMapping("/editUser")
-    public ResponseResult editUser(@RequestBody UserVoRequest userVoRequest) {
+    public ResponseResult editUser(@RequestBody EditUserRequestVo editUserRequestVo) {
 //        判断参数是否为空
-        if (userVoRequest == null) {
+        if (editUserRequestVo == null) {
             throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
         }
 
-        ResponseResult result = usersService.editUser(userVoRequest);
+        ResponseResult result = usersService.editUser(editUserRequestVo);
 
         return result;
     }
 
+
+//    根据id删除用户接口
+    @PostMapping("/delUser/userId")
+    public ResponseResult delUser(@RequestBody UserIdRequest userIdRequest){
+
+//        检测用户参数是否正确
+        int userId = userIdRequest.getUserId();
+        if(userId <= 0){
+            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+        }
+
+        ResponseResult result = usersService.delUserById(userId);
+
+        return result;
+
+    }
+
+//    根据id重置用户密码
+    @PostMapping("/resetPwd/userId")
+    public ResponseResult resetPwdById(@RequestBody UserIdRequest userIdRequest){
+
+//        检测用户id参数是否正确
+        int userId = userIdRequest.getUserId();
+        if(userId <= 0){
+            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+        }
+
+        ResponseResult result = usersService.resetPwdById(userId);
+
+        return result;
+    }
 
 }

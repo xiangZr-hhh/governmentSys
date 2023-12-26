@@ -1,6 +1,8 @@
 package com.sys.common;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mysql.cj.xdevapi.JsonArray;
 
 
 import java.io.Serializable;
@@ -14,6 +16,7 @@ public class ResponseResult<T> implements Serializable {
     public ResponseResult() {
         this.code = AppHttpCodeEnum.SUCCESS.getCode();
         this.msg = AppHttpCodeEnum.SUCCESS.getMsg();
+        this.data = (T) new JSONObject();
     }
 
     public ResponseResult(Integer code, T data) {

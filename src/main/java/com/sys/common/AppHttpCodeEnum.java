@@ -8,7 +8,8 @@ public enum AppHttpCodeEnum {
     JSON_ERROR(403,"JSON数据格式错误"),
     SEARACH_NULL(407,"未找到数据"),
     SYSTEM_EXCEPTION(405,"系统内部异常"),
-    FILE_EMPTY(409,"文件为空");
+    FILE_EMPTY(409,"文件为空"),
+    USERNAME_DIPLICATE(4401,"用户名重复");
 
     int code;
     String msg;
