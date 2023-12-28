@@ -94,7 +94,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     public ResponseResult getUserFromDept(Integer deptId) {
 //        查询数据
         LambdaQueryWrapper<Users> userWrapper = new LambdaQueryWrapper<>();
-        List<Users> users = usersMapper.selectList(userWrapper.eq(Users::getDeptId,deptId));
+        List<Users> users = usersMapper.selectList(userWrapper.eq(Users::getDeptId,deptId).eq(Users::getState,UserRoleConstant.USER_NORMAL));
 
 //        封装vo类
         List<UserVo> userVos = new ArrayList<>();

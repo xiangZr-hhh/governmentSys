@@ -28,4 +28,10 @@ public interface UserRoleConstant {
     //    用户删除状态
     String USER_DEPT = "1";
 
+    //    用户正常状态
+    String USER_NORMAL = "0";
+
+    //    部门正常状态
+    String DEPT_NORMAL = "0";
+
 }

@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("task")
 public class Task  {
+
     @TableId(type= IdType.AUTO)
     private Integer id;
     //文号，例：[2023]01号

@@ -1,6 +1,8 @@
 package com.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sys.common.ResponseResult;
+import com.sys.entity.RequestVo.SubmitTaskRequestVo;
 import com.sys.entity.Task;
 
 
@@ -12,5 +14,6 @@ import com.sys.entity.Task;
  */
 public interface TaskService extends IService<Task> {
 
+    ResponseResult submitNewTask(SubmitTaskRequestVo submitTaskRequestVo);
 }
 

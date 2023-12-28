@@ -4,9 +4,9 @@ import com.sys.common.AppHttpCodeEnum;
 import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.AddDeptRequestVo;
 import com.sys.entity.RequestVo.DepIdRequestVo;
+import com.sys.entity.RequestVo.EditDeptRequestVo;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.DeptServiceImpl;
-import jdk.management.resource.ResourceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,9 +38,22 @@ public class DeptController {
         return result;
     }
 
+
+    @PostMapping("/editDept")
+    public ResponseResult editDept(@RequestBody EditDeptRequestVo editDeptRequestVo){
+
+        if(editDeptRequestVo == null){
+            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+        }
+
+        ResponseResult result = deptService.editDept(editDeptRequestVo);
+        return result;
+    }
+
     @PostMapping("/delDept")
     public ResponseResult delDept(@RequestBody DepIdRequestVo depIdRequestVo){
         Integer deptId = depIdRequestVo.getDeptId();
+
         if(deptId <= 0){
             throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
         }
@@ -48,6 +61,7 @@ public class DeptController {
         ResponseResult result = deptService.delDept(deptId);
         return result;
     }
+
 
 
 }
