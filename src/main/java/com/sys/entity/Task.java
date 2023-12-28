@@ -4,6 +4,7 @@ import java.util.Date;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class Task  {
     private String mtasker;
     //协办单位id拼接字符串（用逗号作分隔符）
     private String stasker;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //交办时间
     private Date startTime;
     //办理时限

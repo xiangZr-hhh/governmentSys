@@ -43,4 +43,15 @@ public class Flow  {
     private Integer score;
 
 
+    public Flow(Integer taskId, String action, Integer excuter, Date excuteTime, String stateBefore, String stateAfte, Integer nextExcuter, String note, Integer score) {
+        this.taskId = taskId;
+        this.action = action;
+        this.excuter = excuter;
+        this.excuteTime = excuteTime;
+        this.stateBefore = stateBefore;
+        this.stateAfte = stateAfte;
+        this.nextExcuter = nextExcuter;
+        this.note = note;
+        this.score = score;
+    }
 }

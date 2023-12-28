@@ -23,7 +23,7 @@ public class FromVo {
 
     private Integer mTaskerid;
 
-    private Integer[]  sTaskerid;
+    private Integer[] sTaskerid;
 
     private String startTime;
 

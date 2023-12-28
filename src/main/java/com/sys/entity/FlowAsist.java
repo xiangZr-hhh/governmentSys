@@ -36,5 +36,12 @@ public class FlowAsist  {
     //意见
     private String note;
 
-
+    public FlowAsist(Integer taskId, Integer deptId, String action, Integer excuter, Date excuteTime, String note) {
+        this.taskId = taskId;
+        this.deptId = deptId;
+        this.action = action;
+        this.excuter = excuter;
+        this.excuteTime = excuteTime;
+        this.note = note;
+    }
 }
