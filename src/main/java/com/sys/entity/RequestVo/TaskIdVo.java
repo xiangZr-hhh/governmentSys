@@ -6,8 +6,8 @@ import lombok.Data;
         张睿相   Java
 */
 @Data
-public class AddDeptRequestVo {
+public class TaskIdVo {
 
-    private String deptName;
+    private Integer taskId;
 
 }

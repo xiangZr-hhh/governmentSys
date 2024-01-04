@@ -4,6 +4,7 @@ import java.util.Date;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class FlowAsist  {
     @TableId(type= IdType.AUTO)
     private Integer id;
-    //任务id
+    //事项id
     private Integer taskId;
     //协办部门id
     private Integer deptId;
@@ -32,6 +33,7 @@ public class FlowAsist  {
     //执行人id
     private Integer excuter;
     //执行时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date excuteTime;
     //意见
     private String note;

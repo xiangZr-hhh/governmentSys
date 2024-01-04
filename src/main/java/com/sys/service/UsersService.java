@@ -2,6 +2,7 @@ package com.sys.service;
 
 import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.EditUserRequestVo;
+import com.sys.entity.RequestVo.UpdatePWDVo;
 import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -27,5 +28,7 @@ public interface UsersService extends IService<Users> {
     ResponseResult delUserById(int userId);
 
     ResponseResult resetPwdById(int userId);
+
+    ResponseResult updatePWD(UpdatePWDVo updatePWDVo);
 }
 

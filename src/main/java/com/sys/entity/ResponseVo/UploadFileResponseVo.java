@@ -1,4 +1,4 @@
-package com.sys.entity.RequestVo;
+package com.sys.entity.ResponseVo;
 
 import lombok.Data;
 
@@ -6,11 +6,9 @@ import lombok.Data;
         张睿相   Java
 */
 @Data
-public class AttachmentVo {
+public class UploadFileResponseVo {
 
     private String uid;
-
-    private String name;
 
     private String url;
 

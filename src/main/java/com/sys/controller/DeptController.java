@@ -1,4 +1,7 @@
 package com.sys.controller;
+/*
+        张睿相   Java
+*/
 
 import com.sys.common.AppHttpCodeEnum;
 import com.sys.common.ResponseResult;
@@ -13,19 +16,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * 总体描述:
+ * <p>创建时间：2024/1/1 16:05</p>
+ *
+ * @author zhaoXin
+ * @since v1.0
+ */
 @RestController
 public class DeptController {
 
     @Autowired
-    private DeptServiceImpl  deptService;
+    private DeptServiceImpl deptService;
 
+    /**
+     * @Description: TODO 获取部门列表
+     * @Date: 2024/1/2
+
+     **/
     @GetMapping("/getDeptList")
     public ResponseResult getDeptList(){
         ResponseResult result = deptService.getDeptList();
         return result;
     }
 
+    /**
+     * @Description: TODO 添加部门
+     * @Date: 2024/1/2
+     * @Param addDeptRequestVo:
+     **/
     @PostMapping("/addDept")
     public ResponseResult addDept(@RequestBody AddDeptRequestVo addDeptRequestVo){
         String deptName = addDeptRequestVo.getDeptName();
@@ -39,6 +58,11 @@ public class DeptController {
     }
 
 
+    /**
+     * @Description: TODO 编辑部门
+     * @Date: 2024/1/2
+     * @Param editDeptRequestVo:
+     **/
     @PostMapping("/editDept")
     public ResponseResult editDept(@RequestBody EditDeptRequestVo editDeptRequestVo){
 
@@ -50,6 +74,11 @@ public class DeptController {
         return result;
     }
 
+    /**
+     * @Description: TODO 删除部门
+     * @Date: 2024/1/2
+     * @Param depIdRequestVo:
+     **/
     @PostMapping("/delDept")
     public ResponseResult delDept(@RequestBody DepIdRequestVo depIdRequestVo){
         Integer deptId = depIdRequestVo.getDeptId();
@@ -62,6 +91,6 @@ public class DeptController {
         return result;
     }
 
-
-
 }
+
+

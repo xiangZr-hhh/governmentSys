@@ -27,22 +27,23 @@ public class Task  {
     private Integer id;
     //文号，例：[2023]01号
     private String taskNo;
-    //任务类型
+    //事项类型
     private String taskType;
     //是否重大
     private String isVip;
-    //任务名称
+    //事项名称
     private String taskName;
-    //任务描述
+    //事项描述
     private String taskDetail;
     //主办单位id
     private String mtasker;
     //协办单位id拼接字符串（用逗号作分隔符）
     private String stasker;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //交办时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
     //办理时限
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
     //紧急程度
     private String urgency;
@@ -53,10 +54,11 @@ public class Task  {
     //创建人
     private Integer createBy;
     //创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     //是否黄牌警告（0：否；1：是）
     private Integer yellowCard;
-    //任务状态
+    //事项状态
     private String state;
 
 

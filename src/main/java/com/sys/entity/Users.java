@@ -22,8 +22,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class Users  {
     @TableId(type= IdType.AUTO)
     private Integer id;
-    //用户编号（工号），登录用
-    private String jobNumber;
     //密码，md5加密
     private String password;
     //用户名

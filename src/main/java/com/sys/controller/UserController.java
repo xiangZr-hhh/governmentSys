@@ -31,7 +31,7 @@ public class UserController {
         return result;
     }
 
-    @PostMapping("/getUserList/deptId")
+    @GetMapping("/getUserList/deptId")
     public ResponseResult getUserFromDept(@RequestBody UserFromDeptRequestVo userFromDeptRequestVo) {
 
         int deptId = userFromDeptRequestVo.getDeptId();
@@ -70,7 +70,6 @@ public class UserController {
         return result;
     }
 
-
 //    根据id删除用户接口
     @PostMapping("/delUser/userId")
     public ResponseResult delUser(@RequestBody UserIdRequest userIdRequest){
@@ -98,6 +97,23 @@ public class UserController {
         }
 
         ResponseResult result = usersService.resetPwdById(userId);
+
+        return result;
+    }
+
+    /**
+     * @Description: TODO 登录人员修改密码
+     * @Date: 2024/1/3
+     * @Param null:
+     **/
+    @PostMapping("/updatePwd")
+    public ResponseResult updatePwd(@RequestBody UpdatePWDVo updatePWDVo){
+
+        if(updatePWDVo == null){
+            throw  new BusinessException(AppHttpCodeEnum.DATA_NULL);
+        }
+
+        ResponseResult result = usersService.updatePWD(updatePWDVo);
 
         return result;
     }
