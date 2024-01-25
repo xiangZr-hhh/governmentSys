@@ -21,6 +21,6 @@ public interface DeptService extends IService<Dept> {
     //    删除部门
     ResponseResult delDept(Integer deptId);
 
-    ResponseResult editDept(EditDeptRequestVo editDeptRequestVo);
+    ResponseResult editDept(Integer deptId, String newDeptName);
 }
 

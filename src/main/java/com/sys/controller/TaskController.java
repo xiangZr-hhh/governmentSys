@@ -1,12 +1,15 @@
 package com.sys.controller;
 
 
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.*;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.TaskServiceImpl;
+import com.sys.utils.TaskUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +27,7 @@ public class TaskController {
     public ResponseResult submitNewTask(@RequestBody SubmitTaskRequestVo submitTaskRequestVo){
 
         if(submitTaskRequestVo == null){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+            throw new BusinessException(ErrorCode.DATA_NULL);
         }
 
         ResponseResult result = taskService.submitNewTask(submitTaskRequestVo);
@@ -32,28 +35,30 @@ public class TaskController {
         return result;
     }
 
-//    4.2 督查跟踪：查看办理中（状态：1，3，4，5，6，7，8，12，13,14,15）的事项清单
+//    4.2 督查跟踪：查看办理中（状态：1-11）的事项清单
 //    可以点开某一条查看详情和办理过程中的流程信息
-    @GetMapping("/getAllTasks/userId")
-    public ResponseResult getAllTaskByUserId(@RequestBody UserIdRequest userIdRequest){
+    @GetMapping("/getAllTasks")
+    public ResponseResult getAllTaskByUserId(@RequestParam(value = "userId", required = false) Long userId){
 
-        Integer userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+//        如果userId为空，查询全部
+        if(userId == null){
+            return taskService.getAllTask();
         }
 
-        ResponseResult result = taskService.getAllTaskByUserId(userId);
+//        如果userId不为空，查询对应部门的信息
+        if(userId != null){
+            return taskService.getAllTask(userId);
+        }
 
-        return result;
+        return ResponseResult.okResult();
     }
 
 //    4.2 根据事项id获取事项内容与流程
     @GetMapping("/getTaskContent/taskId")
-    public ResponseResult getTaskById(@RequestBody TaskIdVo taskIdVo){
+    public ResponseResult getTaskById(@RequestParam Integer taskId){
 
-        Integer taskId = taskIdVo.getTaskId();
         if(taskId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+            throw new BusinessException(ErrorCode.JSON_ERROR);
         }
 
         ResponseResult result = taskService.getTaskById(taskId);
@@ -67,7 +72,7 @@ public class TaskController {
     public ResponseResult uploadFile(@RequestPart MultipartFile file){
 
         if (file.isEmpty()) {
-            return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NULL);
+            return ResponseResult.errorResult(ErrorCode.DATA_NULL);
         }
 
         ResponseResult result = taskService.uploadFile(file);
@@ -76,31 +81,20 @@ public class TaskController {
 
     }
 
-//    4.3 获取已驳回事项（督办人员、督办主任）
-    @GetMapping("/getRejectedTasks/userId")
-    public ResponseResult getRejectTasksById(@RequestBody UserIdRequest userIdRequest){
 
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-
-        ResponseResult result = taskService.getRejctTasksById(userId);
-
-        return result;
-
+//3.重点提示事项：查看领办逾期（状态3）、反馈逾期（状态7）、反馈驳回（状态9）的事项清单，可以点开某一条查看详情和办理过程中的流程信息
+    @GetMapping("/getKeytipTasks")
+    public ResponseResult getKeytipTasks(){
+        return taskService.getKeytipTasks();
     }
 
-//    4.4 查看已办结（状态：10）的事项清单
-    @GetMapping("/getCompletedTasks")
-    public ResponseResult getCompletedTask(){
-
-        ResponseResult result = taskService.getCompletedTask();
-
-        return result;
+//4.跟踪督查事项：查看待交办（状态1）、待领办（状态2）、推进中（状态5-6）、已反馈（状态8）的事项清单，点击查看可以点开某一条查看详情和办理过程中的流程信息
+    @GetMapping("/getTrackedTasks")
+    public ResponseResult getTrackedTasks(){
+        return taskService.getTrackedTasks();
     }
 
-//    4.4 查看已归档（状态：11）的事项清单
+
     @GetMapping("/getArchivedTasks")
     public ResponseResult getArchivedTasks(){
 
@@ -109,223 +103,71 @@ public class TaskController {
         return result;
     }
 
-
     /**
-     * @Description: TODO 督办人员提交的待审事项
-     * @Date: 2024/1/3
-
-     **/
-    @GetMapping("/getReviewTasksAfterSubmit")
-    public ResponseResult getReviewAfterSubmit(){
-
-        ResponseResult result = taskService.getReviewAfterSubmit();
-
-        return result;
-
-    }
-
-
-    /**
-     * @Description: TODO 主/协办单位提交的待审事项
-     * @Date: 2024/1/3
-
-     **/
-    @GetMapping("/getReviewTasksAfterFeedback")
-    public ResponseResult getReviewTaskAfterFeedback(){
-
-        ResponseResult result = taskService.getReviewTaskAfterFeedback();
-
-        return result;
-
-    }
-
-
-    /**
-     * @Description: TODO 获取事项办理结果（督办主任）
-     * @Date: 2024/1/3
-     * @Param taskIdVo:
-     **/
-    @GetMapping("/getTaskResult/taskId")
-    public ResponseResult getTaskResult(@RequestBody TaskIdVo taskIdVo){
-
-        Integer taskId = taskIdVo.getTaskId();
-        if(taskId <= 0){
-            throw  new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-
-        ResponseResult result = taskService.getTaskResult(taskId);
-
-        return result;
-    }
-
-
-    /**
-     * @Description: TODO 审批事项
-     * @Date: 2024/1/3
-     * @Param approverTaskRequestVo:
-     **/
-    @PostMapping("/approveTask/taskId")
-    public ResponseResult approveTask(@RequestBody ApproverTaskRequestVo approverTaskRequestVo){
-
-        if(approverTaskRequestVo== null){
-            throw  new BusinessException(AppHttpCodeEnum.DATA_NULL);
-        }
-
-        ResponseResult result = taskService.approveTask(approverTaskRequestVo);
-
-        return result;
-    }
-
-
-    /**
-     * @Description: TODO 终止任务
-     * @Date: 2024/1/3
-     * @Param taskIdVo: 
-     **/
-    @PostMapping("/suspentTask/taskId")
-    public ResponseResult suspentTask(@RequestBody TaskIdVo taskIdVo){
-        
-        int taskId = taskIdVo.getTaskId();
-        
-        if(taskId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-        
-        ResponseResult result = taskService.suspentTask(taskId);
-        
-        return result;
-    }
-
-
-    /**
-     * @Description: TODO 获取所有部门的得分，只包含业务部门
+     * @Description:  获取所有部门的得分，只包含业务部门
      * @Date: 2024/1/3
      **/
     @GetMapping("/getScoreList")
-    public ResponseResult getScoreList(){
+    public ResponseResult getScoreList(@RequestParam String beginDate,@RequestParam String endDate){
 
-        ResponseResult result = taskService.getScoreList();
+        ResponseResult result = taskService.getScoreList(beginDate,endDate);
         return result;
     }
 
+    @GetMapping("/getScoreDetail")
+    public ResponseResult getScoreDetail(@RequestParam String beginDate,
+                                         @RequestParam String endDate,@RequestParam Integer deptId){
+        return taskService.getScoreDetail(beginDate,endDate,deptId);
+    }
 
+    @GetMapping("/getTaskResult/taskId")
+    public ResponseResult getTaskResultById(@RequestParam Long taskId){
 
-    /**
-     * @Description: TODO 获取单个部门的得分
-     * @Date: 2024/1/3
-     * @Param depIdRequestVo:
-     **/
-    @GetMapping("/getScoreDetail/deptId")
-    public ResponseResult getScoreDetailById(@RequestBody DepIdRequestVo depIdRequestVo){
-
-        Integer deptId = depIdRequestVo.getDeptId();
-
-        if(deptId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+        if(taskId == null){
+            return ResponseResult.errorResult(ErrorCode.JSON_ERROR);
         }
 
-        ResponseResult result = taskService.getScoreDetailById(deptId);
+        return taskService.getTaskResultById(taskId);
+    }
 
-        return result;
+    @PutMapping("/approveTask/taskId")
+    public ResponseResult approveTaskById(){
+
+        return taskService.approveTaskById();
     }
 
 
-    /**
-     * @Description: TODO 查看主办单位待执行或被驳回的事项
-     * @Date: 2024/1/4
-     * @Param userIdRequest: 
-     **/
-    @GetMapping("/getUnclaimedTasks/userId")
-    public ResponseResult getUnclaimedTasks(@RequestBody UserIdRequest userIdRequest){
-
-//        获取userId
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw  new BusinessException(AppHttpCodeEnum.DATA_NULL);
+    @PutMapping("/approveResult/taskId")
+    public ResponseResult approveResultById(@RequestParam Long taskId){
+        if(taskId == null){
+            return ResponseResult.errorResult(ErrorCode.JSON_ERROR);
         }
 
-        ResponseResult result = taskService.getUnclaimedTasks(userId);
-        return result;
+        return taskService.approveResultById(taskId);
     }
 
 
-    /**
-     * @Description: TODO 主办单位领取事项
-     * @Date: 2024/1/4
-     * @Param taskIdAndUserIdRequestVo:
-     **/
-    @PostMapping("/claimTask")
-    public ResponseResult claimTask(@RequestBody TaskIdAndUserIdRequestVo taskIdAndUserIdRequestVo){
-        
-//        获取数据 并 检验
-        Integer userId = taskIdAndUserIdRequestVo.getUserId();
-        Integer taskId = taskIdAndUserIdRequestVo.getTaskId();
-        if(userId <= 0 || taskId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+    @PutMapping("/submitRejectTask")
+    public ResponseResult submitRejectTask(@RequestBody  @Validated SubmitRejectTaskVo submitRejectTaskVo, BindingResult bindingResult){
+
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
         }
-        
-        ResponseResult result = taskService.claimTask(userId,taskId);
-        return result;
+
+        return taskService.submitRejectTask(submitRejectTaskVo);
     }
 
 
-
-    /**
-     * @Description: TODO 获取办事人员已提交但未审核的事项
-     * @Date: 2024/1/4
-     * @Param userIdRequest: 
-     **/
-    @GetMapping("/getUnapprovedTasks/userId")
-    public ResponseResult getUnapprovedTasks(@RequestBody UserIdRequest userIdRequest){
-
-//        获取userId并检验
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+    @PutMapping("/suspentTask/taskId")
+    public ResponseResult suspentTaskById(@RequestParam Long taskId){
+        if(taskId == null){
+            return ResponseResult.errorResult(ErrorCode.JSON_ERROR);
         }
 
-        ResponseResult result = taskService.getUnapprovedTasks(userId);
-        return  result;
+        return taskService.suspentTaskById(taskId);
     }
 
 
-
-    /**
-     * @Description: TODO 获取本部门的办事人员列表
-     * @Date: 2024/1/4
-     * @Param userIdRequest: 
-     **/
-    @GetMapping("/getStaffList/userId")
-    public ResponseResult getStaffList(@RequestBody UserIdRequest userIdRequest){
-
-//        获取userId并检验
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-
-        ResponseResult result = taskService.getStaffList(userId);
-        return  result;
-        
-    }
-
-
-
-    /**
-     * @Description: TODO 获取已经领办待未分配办事人员的事项
-     * @Date: 2024/1/4
-     * @Param userIdRequest:
-     **/
-    @GetMapping("/getClaimedTasks/userId")
-    public ResponseResult getClaimedTasks(@RequestBody UserIdRequest userIdRequest){
-//        获取userId并检验
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-
-        ResponseResult result = taskService.getClaimedTasks(userId);
-        return  result;
-    }
 
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class UploadFileResponseVo {
 
-    private String uid;
+    private String uuid;
 
     private String url;
 

@@ -13,9 +13,8 @@ public class FlowVo {
     //操作名称
     private String action;
     //执行人id
-    private Integer excuter;
+    private String excutername;
     //执行时间
     private Date excuteTime;
-    //意见
-    private String note;
+
 }

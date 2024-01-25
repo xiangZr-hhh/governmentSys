@@ -1,10 +1,8 @@
 package com.sys.entity;
 
-import java.util.Date;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * (Flow)表实体类
  *
  * @author zrx
- * @since 2023-12-21 20:13:25
+ * @since 2024-01-22 11:16:57
  */
 @SuppressWarnings("serial")
 @Data
@@ -22,38 +20,19 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("flow")
 public class Flow  {
+    //主键
     @TableId(type= IdType.AUTO)
     private Integer id;
-    //事项id
+    //任务id
     private Integer taskId;
-    //操作名称
-    private String action;
-    //执行人id
+    //主办/协办单位id
+    private Integer deptId;
+    //0:主办；1:协办
+    private Integer type;
+    //当前主/协办单位办理状态:2-10
+    private String status;
+    //待执行人id；支线完成则置空
     private Integer excuter;
-    //执行时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date excuteTime;
-    //执行前事项状态
-    private String stateBefore;
-    //执行后事项状态
-    private String stateAfte;
-    //下一个执行人id
-    private Integer nextExcuter;
-    //意见
-    private String note;
-    //得分或扣分
-    private Integer score;
 
 
-    public Flow(Integer taskId, String action, Integer excuter, Date excuteTime, String stateBefore, String stateAfte, Integer nextExcuter, String note, Integer score) {
-        this.taskId = taskId;
-        this.action = action;
-        this.excuter = excuter;
-        this.excuteTime = excuteTime;
-        this.stateBefore = stateBefore;
-        this.stateAfte = stateAfte;
-        this.nextExcuter = nextExcuter;
-        this.note = note;
-        this.score = score;
-    }
 }

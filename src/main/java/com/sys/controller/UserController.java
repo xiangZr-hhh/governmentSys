@@ -1,11 +1,15 @@
 package com.sys.controller;
 
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.*;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.UsersServiceImpl;
+import com.sys.utils.TaskUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -19,11 +23,11 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseResult login(@RequestBody LoginRequestVo loginRequestVo) {
+    public ResponseResult login(@RequestBody @Validated LoginRequestVo loginRequestVo, BindingResult bindingResult) {
 
-//        判断请求参数是否为空
-        if (loginRequestVo == null) {
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+// 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
         }
 
 //        请求登录
@@ -32,52 +36,46 @@ public class UserController {
     }
 
     @GetMapping("/getUserList/deptId")
-    public ResponseResult getUserFromDept(@RequestBody UserFromDeptRequestVo userFromDeptRequestVo) {
+    public ResponseResult getUserFromDept(@RequestParam Integer deptId) {
 
-        int deptId = userFromDeptRequestVo.getDeptId();
-//        判断参数是否为空
-        if (deptId < 0) {
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+        if (deptId == null || deptId <= 0) {
+            throw new BusinessException(ErrorCode.JSON_ERROR);
         }
 
-        ResponseResult result = usersService.getUserFromDept(deptId);
-
-        return result;
+        return usersService.getUserFromDept(deptId);
     }
+
+
 
     @PostMapping("/addUser")
-    public ResponseResult addUser(@RequestBody UserVoRequest userVoRequest) {
-
-//        判断参数是否为空
-        if (userVoRequest == null) {
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+    public ResponseResult addUser(@RequestBody @Validated UserInfoRequestVo userVoRequest, BindingResult bindingResult) {
+// 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
         }
 
-        ResponseResult result = usersService.addUser(userVoRequest);
+        return usersService.addUser(userVoRequest.getUserInfo());
+    }
+
+    @PutMapping("/editUser")
+    public ResponseResult editUser(@RequestBody UserEditInfoRequestVo userInfo) {
+//        判断参数是否为空
+        if (userInfo.getUserInfo() == null) {
+            throw new BusinessException(ErrorCode.DATA_NULL);
+        }
+
+        ResponseResult result = usersService.editUser(userInfo.getUserInfo());
 
         return result;
     }
 
-    @PostMapping("/editUser")
-    public ResponseResult editUser(@RequestBody EditUserRequestVo editUserRequestVo) {
-//        判断参数是否为空
-        if (editUserRequestVo == null) {
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
-        }
-
-        ResponseResult result = usersService.editUser(editUserRequestVo);
-
-        return result;
-    }
-
-//    根据id删除用户接口
-    @PostMapping("/delUser/userId")
-    public ResponseResult delUser(@RequestBody UserIdRequest userIdRequest){
+    //    根据id删除用户接口
+    @DeleteMapping("/delUser/userId")
+    public ResponseResult delUser(@RequestParam Integer userId) {
 
 //        检测用户参数是否正确
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+        if (userId <= 0) {
+            throw new BusinessException(ErrorCode.JSON_ERROR);
         }
 
         ResponseResult result = usersService.delUserById(userId);
@@ -86,36 +84,34 @@ public class UserController {
 
     }
 
-//    根据id重置用户密码
-    @PostMapping("/resetPwd/userId")
-    public ResponseResult resetPwdById(@RequestBody UserIdRequest userIdRequest){
+    //    根据id重置用户密码
+    @PutMapping("/resetPwd/userId")
+    public ResponseResult resetPwdById(@RequestParam Integer userId) {
 
 //        检测用户id参数是否正确
-        int userId = userIdRequest.getUserId();
-        if(userId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+        if (userId <= 0) {
+            throw new BusinessException(ErrorCode.REQUEST_BODY_ERROR);
         }
 
-        ResponseResult result = usersService.resetPwdById(userId);
+        return usersService.resetPwdById(userId);
 
-        return result;
     }
 
-    /**
-     * @Description: TODO 登录人员修改密码
-     * @Date: 2024/1/3
-     * @Param null:
-     **/
-    @PostMapping("/updatePwd")
-    public ResponseResult updatePwd(@RequestBody UpdatePWDVo updatePWDVo){
 
-        if(updatePWDVo == null){
-            throw  new BusinessException(AppHttpCodeEnum.DATA_NULL);
+    /**
+     * @Description: 登录人员修改密码
+     * @Date: 2024/1/21
+     * @Param updatePWDVo:
+     **/
+    @PutMapping("/updatePwd")
+    public ResponseResult updatePwd(@RequestBody @Validated UpdatePWDVo updatePWDVo, BindingResult bindingResult) {
+
+// 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
         }
 
-        ResponseResult result = usersService.updatePWD(updatePWDVo);
-
-        return result;
+        return usersService.updatePWD(updatePWDVo);
     }
 
 }

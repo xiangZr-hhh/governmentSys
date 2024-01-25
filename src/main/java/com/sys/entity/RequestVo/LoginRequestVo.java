@@ -10,11 +10,7 @@ import lombok.Data;
 @Data
 public class LoginRequestVo {
 
-    //用户名
-    private String username;
-
-    //密码，md5加密
-    private String password;
+    private LoginFormVo loginForm;
 
 
 }

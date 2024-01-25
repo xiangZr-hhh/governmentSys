@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * (Dept)表实体类
  *
  * @author zrx
- * @since 2023-12-21 20:13:15
+ * @since 2024-01-22 10:27:06
  */
 @SuppressWarnings("serial")
 @Data

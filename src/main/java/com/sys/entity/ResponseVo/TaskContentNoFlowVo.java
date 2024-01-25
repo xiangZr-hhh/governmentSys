@@ -1,17 +1,15 @@
 package com.sys.entity.ResponseVo;
 
+
 import com.sys.entity.RequestVo.AttachmentVo;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
-/*
-        张睿相   Java
-*/
-@Data
-public class TaskContentVo {
 
+@Data
+public class TaskContentNoFlowVo {
     //事项ID
     private Integer taskId;
     //文号，例：[2023]01号
@@ -24,12 +22,8 @@ public class TaskContentVo {
     private String taskName;
     //事项描述
     private String taskDetail;
-    //主办单位id
-    private Integer[] mTaskerId;
     //主办单位名称
     private List<String> mTasker;
-    //协办单位id数组
-    private Integer[] sTaskerId;
     //协办单位名称数组
     private List<String> sTaske;
     //交办时间
@@ -42,11 +36,11 @@ public class TaskContentVo {
     private String notes;
     //附件
     private List<AttachmentVo> attachment;
-    //流程
-    private List<FlowVo> flow;
-
-
+    //任务状态
+    private String status;
 
 
 
 }
+
+

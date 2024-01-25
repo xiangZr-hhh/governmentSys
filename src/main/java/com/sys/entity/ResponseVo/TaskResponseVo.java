@@ -1,5 +1,6 @@
 package com.sys.entity.ResponseVo;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.util.Date;
@@ -22,7 +23,7 @@ public class TaskResponseVo {
     //事项名称
     private String taskName;
     //主办单位id
-    private String mtasker;
+    private List<String> mtasker;
     //协办单位id拼接字符串（用逗号作分隔符）
     private List<String> stasker;
     //交办时间
@@ -30,6 +31,6 @@ public class TaskResponseVo {
     //办理时限
     private Date endTime;
     //事项状态
-    private String state;
+    private List<JSONObject> status;
 
 }

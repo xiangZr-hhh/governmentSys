@@ -1,7 +1,7 @@
 package com.sys.excption;
 
 
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 
 /**
  * 自定义异常类
@@ -15,13 +15,13 @@ public class BusinessException extends RuntimeException {
     private final String description;
 
 
-    public BusinessException(AppHttpCodeEnum errorCode) {
+    public BusinessException(ErrorCode errorCode) {
         super(errorCode.getMsg());
         this.code = errorCode.getCode();
         this.description = errorCode.getMsg();
     }
 
-    public BusinessException(AppHttpCodeEnum errorCode, String description) {
+    public BusinessException(ErrorCode errorCode, String description) {
         super(description);
         this.code = errorCode.getCode();
         this.description = description;

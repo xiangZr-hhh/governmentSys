@@ -7,6 +7,7 @@ import com.sys.entity.RequestVo.UserVoRequest;
 import com.sys.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sys.entity.RequestVo.LoginRequestVo;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -27,8 +28,11 @@ public interface UsersService extends IService<Users> {
 
     ResponseResult delUserById(int userId);
 
-    ResponseResult resetPwdById(int userId);
+    //  根据id重置密码
+    ResponseResult resetPwdById(@RequestParam Integer userId);
 
     ResponseResult updatePWD(UpdatePWDVo updatePWDVo);
+
+    ResponseResult getUserListByDeptId(Long deptId);
 }
 

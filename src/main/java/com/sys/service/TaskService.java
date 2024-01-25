@@ -2,7 +2,7 @@ package com.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sys.common.ResponseResult;
-import com.sys.entity.RequestVo.ApproverTaskRequestVo;
+import com.sys.entity.RequestVo.SubmitRejectTaskVo;
 import com.sys.entity.RequestVo.SubmitTaskRequestVo;
 import com.sys.entity.Task;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,41 +18,63 @@ public interface TaskService extends IService<Task> {
 
     ResponseResult submitNewTask(SubmitTaskRequestVo submitTaskRequestVo);
 
-    ResponseResult getAllTaskByUserId(Integer userId);
+    ResponseResult getAllTask();
 
     ResponseResult getTaskById(Integer taskId);
 
     ResponseResult uploadFile(MultipartFile file);
 
-    ResponseResult getRejctTasksById(int userId);
+    ResponseResult getKeytipTasks();
 
-    //  获取以及完成度事项id
-    ResponseResult getCompletedTask();
-
+    ResponseResult getTrackedTasks();
+//
+//    ResponseResult getRejctTasksById(int userId);
+//
+//    //  获取以及完成度事项id
+//    ResponseResult getCompletedTask();
+//
     ResponseResult getArchivedTask();
+//
+//    ResponseResult getReviewAfterSubmit();
+//
+//    ResponseResult getReviewTaskAfterFeedback();
+//
+//    ResponseResult getTaskResult(Integer taskId);
+//
+//    ResponseResult approveTask(ApproverTaskRequestVo approverTaskRequestVo);
+//
+//    ResponseResult suspentTask(int taskId);
+//
+    ResponseResult getScoreList(String beginDate, String endDate);
 
-    ResponseResult getReviewAfterSubmit();
+    ResponseResult getScoreDetail(String beginDate, String endDate, Integer deptId);
 
-    ResponseResult getReviewTaskAfterFeedback();
+    ResponseResult getTaskResultById(Long taskId);
 
-    ResponseResult getTaskResult(Integer taskId);
+    ResponseResult approveTaskById();
 
-    ResponseResult approveTask(ApproverTaskRequestVo approverTaskRequestVo);
+    ResponseResult approveResultById(Long taskId);
 
-    ResponseResult suspentTask(int taskId);
+    ResponseResult submitRejectTask(SubmitRejectTaskVo submitRejectTaskVo);
 
-    ResponseResult getScoreList();
+    ResponseResult suspentTaskById(Long taskId);
 
-    ResponseResult getScoreDetailById(Integer deptId);
-
-    ResponseResult getUnclaimedTasks(int userId);
-
-    ResponseResult claimTask(Integer userId, Integer taskId);
-
-    ResponseResult getUnapprovedTasks(int userId);
-
-    ResponseResult getStaffList(int userId);
-
-    ResponseResult getClaimedTasks(int userId);
+    ResponseResult getAllTask(Long userId);
+//
+//    ResponseResult getScoreDetailById(Integer deptId);
+//
+//    ResponseResult getUnclaimedTasks(int userId);
+//
+//    ResponseResult claimTask(Integer userId, Integer taskId);
+//
+//    ResponseResult getUnapprovedTasks(int userId);
+//
+//    ResponseResult getStaffList(int userId);
+//
+//    ResponseResult getClaimedTasks(int userId);
+//
+//    ResponseResult getAssignedTasks(int userId);
+//
+//    ResponseResult getSubmittedTasks(int userId);
 }
 

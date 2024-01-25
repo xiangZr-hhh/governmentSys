@@ -45,6 +45,7 @@
               <option name="fullColumn">
                 <list>
                   <ColumnInfoDTO>
+                    <option name="comment" value="主键" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="id" />
@@ -58,59 +59,31 @@
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="操作名称" />
+                    <option name="comment" value="主办/协办单位id" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
-                    <option name="name" value="action" />
+                    <option name="name" value="deptId" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="0:主办；1:协办" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="type" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="当前主/协办单位办理状态:2-10" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="status" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="执行人id" />
+                    <option name="comment" value="待执行人id；支线完成则置空" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="excuter" />
-                    <option name="type" value="java.lang.Integer" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="执行时间" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="excuteTime" />
-                    <option name="type" value="java.util.Date" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="执行前任务状态" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="stateBefore" />
-                    <option name="type" value="java.lang.String" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="执行后任务状态" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="stateAfte" />
-                    <option name="type" value="java.lang.String" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="下一个执行人id" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="nextExcuter" />
-                    <option name="type" value="java.lang.Integer" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="意见" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="note" />
-                    <option name="type" value="java.lang.String" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="得分或扣分" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="score" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                 </list>
@@ -188,6 +161,77 @@
             </TableInfoDTO>
           </value>
         </entry>
+        <entry key="government.flowdetail">
+          <value>
+            <TableInfoDTO>
+              <option name="fullColumn">
+                <list>
+                  <ColumnInfoDTO>
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="id" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="流程id" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="flowId" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="执行动作" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="action" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="意见" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="note" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="执行人id" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="excuter" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="执行人姓名" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="excutername" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="执行时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="excuteTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="扣分;默认0" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="score" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                </list>
+              </option>
+              <option name="name" value="Flowdetail" />
+              <option name="preName" value="" />
+              <option name="saveModelName" value="governmentSys" />
+              <option name="savePackageName" value="com.sys" />
+              <option name="savePath" value="./src/main/java/com/sys" />
+              <option name="templateGroupName" value="" />
+            </TableInfoDTO>
+          </value>
+        </entry>
         <entry key="government.task">
           <value>
             <TableInfoDTO>
@@ -207,7 +251,7 @@
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="任务类型" />
+                    <option name="comment" value="类型" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="taskType" />
@@ -235,7 +279,7 @@
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="主办单位id" />
+                    <option name="comment" value="主办单位id拼接字符串（用逗号作分隔符" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="mtasker" />
@@ -291,10 +335,52 @@
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
+                    <option name="comment" value="创建者姓名" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="createName" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
                     <option name="comment" value="创建时间" />
                     <option name="custom" value="false" />
                     <option name="ext" value="{}" />
                     <option name="name" value="createTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="审核人id" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="approveBy" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="审核人姓名" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="approverName" />
+                    <option name="type" value="java.lang.String" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="审批时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="approveTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="驳回时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="rejectTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="办档归结时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext" value="{}" />
+                    <option name="name" value="completeTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
@@ -332,13 +418,6 @@
                     <option name="ext" value="{}" />
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Integer" />
-                  </ColumnInfoDTO>
-                  <ColumnInfoDTO>
-                    <option name="comment" value="用户编号（工号），登录用" />
-                    <option name="custom" value="false" />
-                    <option name="ext" value="{}" />
-                    <option name="name" value="jobNumber" />
-                    <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="密码，md5加密" />

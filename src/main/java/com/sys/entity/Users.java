@@ -1,7 +1,5 @@
 package com.sys.entity;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * (Users)表实体类
  *
  * @author zrx
- * @since 2023-12-21 20:25:41
+ * @since 2024-01-21 08:52:55
  */
 @SuppressWarnings("serial")
 @Data

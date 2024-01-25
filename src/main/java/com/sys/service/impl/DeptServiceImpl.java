@@ -2,11 +2,11 @@ package com.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
+import com.sys.constant.DeptStateConstant;
 import com.sys.constant.UserRoleConstant;
 import com.sys.entity.Dept;
-import com.sys.entity.RequestVo.EditDeptRequestVo;
 import com.sys.entity.ResponseVo.DeptVo;
 import com.sys.excption.BusinessException;
 import com.sys.mapper.DeptMapper;
@@ -56,7 +56,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if(check != 0 ){
             return ResponseResult.okResult();
         }
-        return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_EXCEPTION);
+        return ResponseResult.errorResult(ErrorCode.SYSTEM_EXCEPTION);
     }
 
 
@@ -67,7 +67,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         Dept dept = deptMapper.selectById(deptId);
 //        如果未找到，抛异常
         if(dept == null){
-            throw new BusinessException(AppHttpCodeEnum.SEARACH_NULL);
+            throw new BusinessException(ErrorCode.SEARACH_NULL);
         }
 
 //        如果部门已经被删除
@@ -83,27 +83,13 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
 
     @Override
-    public ResponseResult editDept(EditDeptRequestVo editDeptRequestVo) {
-
-//        检验参数是否为空
-        int deptId = editDeptRequestVo.getDeptId();
-        if(deptId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
-        }
-        String newDeptName = editDeptRequestVo.getNewDeptName();
-        if(newDeptName.equals("") || newDeptName == null){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
-        }
+    public ResponseResult editDept(Integer deptId, String newDeptName) {
 
 //        获取对应的dept实体类
         Dept dept = deptMapper.selectById(deptId);
 //        搜索不到抛出异常
-        if(dept == null){
-            throw new BusinessException(AppHttpCodeEnum.SEARACH_NULL);
-        }
-
-        if(newDeptName.equals(dept.getDeptName())){
-            return ResponseResult.okResult("新旧部门名称重复，无需更改");
+        if(dept == null || dept.getState().equals(DeptStateConstant.DEPT_IS_DELETE)){
+            throw new BusinessException(ErrorCode.SEARACH_NULL);
         }
 
         dept.setDeptName(newDeptName);

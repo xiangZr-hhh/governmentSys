@@ -3,7 +3,7 @@ package com.sys.controller;
         张睿相   Java
 */
 
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.AddDeptRequestVo;
 import com.sys.entity.RequestVo.DepIdRequestVo;
@@ -11,10 +11,7 @@ import com.sys.entity.RequestVo.EditDeptRequestVo;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.DeptServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 总体描述:
@@ -46,11 +43,10 @@ public class DeptController {
      * @Param addDeptRequestVo:
      **/
     @PostMapping("/addDept")
-    public ResponseResult addDept(@RequestBody AddDeptRequestVo addDeptRequestVo){
-        String deptName = addDeptRequestVo.getDeptName();
+    public ResponseResult addDept(@RequestParam String deptName){
 
         if(deptName.equals("")){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+            throw new BusinessException(ErrorCode.DATA_NULL);
         }
 
         ResponseResult result = deptService.addDept(deptName);
@@ -59,32 +55,31 @@ public class DeptController {
 
 
     /**
-     * @Description: TODO 编辑部门
+     * @Description:  编辑部门
      * @Date: 2024/1/2
      * @Param editDeptRequestVo:
      **/
-    @PostMapping("/editDept")
-    public ResponseResult editDept(@RequestBody EditDeptRequestVo editDeptRequestVo){
+    @PutMapping("/editDept")
+    public ResponseResult editDept(@RequestParam Integer deptId,@RequestParam String newDeptName){
 
-        if(editDeptRequestVo == null){
-            throw new BusinessException(AppHttpCodeEnum.DATA_NULL);
+        if(deptId <= 0 || newDeptName.equals("")){
+            throw new BusinessException(ErrorCode.DATA_NULL);
         }
 
-        ResponseResult result = deptService.editDept(editDeptRequestVo);
+        ResponseResult result = deptService.editDept(deptId,newDeptName);
         return result;
     }
 
     /**
-     * @Description: TODO 删除部门
+     * @Description:  删除部门
      * @Date: 2024/1/2
      * @Param depIdRequestVo:
      **/
-    @PostMapping("/delDept")
-    public ResponseResult delDept(@RequestBody DepIdRequestVo depIdRequestVo){
-        Integer deptId = depIdRequestVo.getDeptId();
+    @DeleteMapping("/delDept")
+    public ResponseResult delDept(@RequestParam Integer deptId){
 
         if(deptId <= 0){
-            throw new BusinessException(AppHttpCodeEnum.JSON_ERROR);
+            throw new BusinessException(ErrorCode.JSON_ERROR);
         }
 
         ResponseResult result = deptService.delDept(deptId);

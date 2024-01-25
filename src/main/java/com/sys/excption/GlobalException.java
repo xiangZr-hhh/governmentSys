@@ -2,7 +2,7 @@ package com.sys.excption;
 
 
 
-import com.sys.common.AppHttpCodeEnum;
+import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +28,7 @@ public class GlobalException extends Throwable {
     @ExceptionHandler(RuntimeException.class)
     public ResponseResult runtimeExceptionHandler(RuntimeException e) {
         log.error("runtimeException", e);
-        return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_EXCEPTION,e.getMessage());
+        return ResponseResult.errorResult(ErrorCode.SYSTEM_EXCEPTION,e.getMessage());
     }
 
 }

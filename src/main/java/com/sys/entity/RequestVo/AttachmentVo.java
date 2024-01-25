@@ -6,6 +6,7 @@ import lombok.Data;
         张睿相   Java
 */
 @Data
+
 public class AttachmentVo {
 
     private String uid;

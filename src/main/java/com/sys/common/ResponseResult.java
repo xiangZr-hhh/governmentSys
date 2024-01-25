@@ -2,11 +2,14 @@ package com.sys.common;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mysql.cj.xdevapi.JsonArray;
-
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
+
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseResult<T> implements Serializable {
     private Integer code;
@@ -14,8 +17,8 @@ public class ResponseResult<T> implements Serializable {
     private T data;
 
     public ResponseResult() {
-        this.code = AppHttpCodeEnum.SUCCESS.getCode();
-        this.msg = AppHttpCodeEnum.SUCCESS.getMsg();
+        this.code = ErrorCode.SUCCESS.getCode();
+        this.msg = ErrorCode.SUCCESS.getMsg();
         this.data = (T) new JSONObject();
     }
 
@@ -49,26 +52,29 @@ public class ResponseResult<T> implements Serializable {
     }
 
     public static ResponseResult okResult(Object data) {
-        ResponseResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getMsg());
+        ResponseResult result = setAppHttpCodeEnum(ErrorCode.SUCCESS, ErrorCode.SUCCESS.getMsg());
         if(data!=null) {
             result.setData(data);
         }
         return result;
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums){
+    public static ResponseResult errorResult(ErrorCode enums){
         return setAppHttpCodeEnum(enums,enums.getMsg());
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums, String msg){
+
+
+    public static ResponseResult errorResult(ErrorCode enums, String msg){
         return setAppHttpCodeEnum(enums,msg);
     }
 
-    public static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums){
+
+    public static ResponseResult setAppHttpCodeEnum(ErrorCode enums){
         return okResult(enums.getCode(),enums.getMsg());
     }
 
-    private static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums, String msg){
+    private static ResponseResult setAppHttpCodeEnum(ErrorCode enums, String msg){
         return okResult(enums.getCode(),msg);
     }
 
@@ -77,6 +83,9 @@ public class ResponseResult<T> implements Serializable {
         this.msg = msg;
         return this;
     }
+
+
+
 
     public ResponseResult<?> ok(Integer code, T data) {
         this.code = code;

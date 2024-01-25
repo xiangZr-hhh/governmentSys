@@ -1,6 +1,6 @@
 package com.sys.common;
 
-public enum AppHttpCodeEnum {
+public enum ErrorCode {
     // 成功
     SUCCESS(200,"操作成功"),
     // 登录
@@ -9,12 +9,17 @@ public enum AppHttpCodeEnum {
     SEARACH_NULL(407,"未找到数据"),
     SYSTEM_EXCEPTION(405,"系统内部异常"),
     FILE_EMPTY(409,"文件为空"),
-    USERNAME_DIPLICATE(4401,"用户名重复");
+    TASK_STATUE_NOT(410,"任务状态错误"),
+    USERNAME_DIPLICATE(4401,"用户名重复"),
+    STATUE_NOT_ALL(4402,"事件状态未统一"),
+    STATUE_ERROR(4403,"事件状态错误"),
+    REQUEST_BODY_ERROR(4404,"请求参数错误"),
+    PAEEWORD_CONVERSION_ERROR(4405,"密码转换错误");
 
     int code;
     String msg;
 
-    AppHttpCodeEnum(int code, String errorMessage){
+    ErrorCode(int code, String errorMessage){
         this.code = code;
         this.msg = errorMessage;
     }
