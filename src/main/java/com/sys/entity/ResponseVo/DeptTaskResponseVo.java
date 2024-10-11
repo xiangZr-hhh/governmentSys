@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class DeptTaskResponseVo {
 
-    private Integer deptId;
+    private String deptName;
 
     private String result;
 

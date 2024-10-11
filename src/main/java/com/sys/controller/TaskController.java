@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
+
 /*
         张睿相   Java
 */
@@ -103,6 +105,12 @@ public class TaskController {
         return result;
     }
 
+    @DeleteMapping("/deleteTaskById")
+    public ResponseResult deleteTask(Integer taskId){
+
+        return taskService.deleteTask(taskId);
+    }
+
     /**
      * @Description:  获取所有部门的得分，只包含业务部门
      * @Date: 2024/1/3
@@ -121,7 +129,7 @@ public class TaskController {
     }
 
     @GetMapping("/getTaskResult/taskId")
-    public ResponseResult getTaskResultById(@RequestParam Long taskId){
+    public ResponseResult getTaskResultById(@RequestParam Integer taskId){
 
         if(taskId == null){
             return ResponseResult.errorResult(ErrorCode.JSON_ERROR);
@@ -130,10 +138,12 @@ public class TaskController {
         return taskService.getTaskResultById(taskId);
     }
 
-    @PutMapping("/approveTask/taskId")
-    public ResponseResult approveTaskById(){
 
-        return taskService.approveTaskById();
+    @PutMapping("/approveTask/taskId")
+    public ResponseResult approveTaskById(Integer taksId){
+
+        return taskService.approveTaskById(taksId);
+
     }
 
 
@@ -160,7 +170,7 @@ public class TaskController {
 
 
     @PutMapping("/suspentTask/taskId")
-    public ResponseResult suspentTaskById(@RequestParam Long taskId){
+    public ResponseResult suspentTaskById(@RequestParam Integer taskId){
         if(taskId == null){
             return ResponseResult.errorResult(ErrorCode.JSON_ERROR);
         }
@@ -169,5 +179,114 @@ public class TaskController {
     }
 
 
+    @GetMapping("/getUnapprovedTasks/userId")
+    public ResponseResult getUnapprovedTasksByUserId(@RequestParam Integer userId){
+        return taskService.getUnapprovedTasksByUserId(userId);
+    }
 
+
+//    审批事件---办事单位主任
+    @PutMapping("/approveFeedback")
+    public ResponseResult approveFeedback(@RequestBody @Validated ApproveFeedbackVo approveFeedbackVo,BindingResult bindingResult){
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
+        }
+
+        return taskService.approveFeedback(approveFeedbackVo);
+    }
+
+
+    @GetMapping("/getApprovedTasks/userId")
+    public ResponseResult getApprovedTasksByUserId(@RequestParam Integer userId){
+
+        return taskService.getApprovedTasksByUserId(userId);
+    }
+
+    @GetMapping("/getDeductedTasks/userId")
+    public ResponseResult getDeductedTasks(@RequestParam Integer userId){
+
+        return taskService.getDeductedTasks(userId);
+    }
+
+    @GetMapping("/getUnclaimedTasks/userId")
+    public ResponseResult getUnclaimedTasks(@RequestParam Integer userId){
+
+        return taskService.getUnclaimedTasks(userId);
+    }
+
+    @PutMapping("/claimTask")
+    public ResponseResult claimTask(@RequestParam Integer taskId,
+                                    @RequestParam Integer userId){
+        return taskService.claimTask(taskId,userId);
+    }
+
+    @GetMapping("/getUnfeedbackTasks/userId")
+    public ResponseResult getUnfeedbackTasks(@RequestParam Integer userId){
+        return taskService.getUnfeedbackTasks(userId);
+    }
+
+
+    @PutMapping("/submitResult")
+    public ResponseResult submitResult(@RequestBody SubmitResultVO submitResultVO,@Validated BindingResult bindingResult){
+
+        // 判断是否有参数错误
+        if (bindingResult.hasErrors()) {
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR, TaskUtils.getValidatedErrorList(bindingResult));
+        }
+
+        return taskService.submitResult(submitResultVO);
+    }
+
+    @GetMapping("/getSubmittedTasks/userId")
+    public ResponseResult getSubmittedTasksByUserId(@RequestParam Integer userId){
+        return taskService.getSubmittedTasksByUserId(userId);
+    }
+
+    @GetMapping("/getOverdueTasks/userId")
+    public ResponseResult getOverdueTasksByUserId(@RequestParam Integer userId){
+        return taskService.getOverdueTasksByUserId(userId);
+    }
+
+
+    @GetMapping("/getRejectedTasks/userId")
+    public ResponseResult getRejectedTasksByUserId(@RequestParam Integer userId){
+        return taskService.getRejectedTasksByUserId(userId);
+    }
+
+
+    @GetMapping("/getTaskFlow/userId")
+    public ResponseResult getTaskFlowByUserId(@RequestParam Integer userId,@RequestParam Integer taskId){
+        return taskService.getTaskFlowByUserId(userId,taskId);
+    }
+
+
+    @PostMapping("/exportScore")
+    public ResponseResult exportScore(@RequestParam String beginDate,
+                                @RequestParam String endDate){
+        return taskService.getExportScore(beginDate,endDate);
+    }
+
+
+    @PostMapping("/exportTask")
+    public ResponseResult exportTask(@RequestParam String status){
+        return taskService.exportTask(status);
+    }
+
+
+    @GetMapping("/getDeptStatus/taskId")
+    public ResponseResult getDeptStatus(@RequestParam Integer taskId){
+        return taskService.getDeptStatus(taskId);
+    }
+
+    @GetMapping("/getAllDeptTasks/userId")
+    public ResponseResult getAllDeptTasks(@RequestParam Integer userId){
+        return taskService.getAllDeptTasks(userId);
+    }
+
+    @GetMapping("/getDeptTaskResult")
+    public ResponseResult getDeptTaskResults(@RequestParam Integer userId  ,
+                                          @RequestParam Integer taskId){
+        return taskService.DeptTaskResult(userId,taskId);
+    }
 }

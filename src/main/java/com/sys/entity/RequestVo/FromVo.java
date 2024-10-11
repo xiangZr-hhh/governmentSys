@@ -29,10 +29,10 @@ public class FromVo {
     private String taskDetail;
 
     @NotNull(message = "主办单位id不能为空")
-    private Integer[] mTaskerid;
+    private Integer[] mtaskerid;
 
     @NotNull(message = "协办单位id不能为空")
-    private Integer[] sTaskerid;
+    private Integer[] staskerid;
 
     @NotBlank(message = "交办时间不能为空")
     private String startTime;

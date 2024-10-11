@@ -1,7 +1,9 @@
 package com.sys.entity.ResponseVo;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
         张睿相   Java
 */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskResponseVo {
 
     //事项id
@@ -28,9 +32,11 @@ public class TaskResponseVo {
     private List<String> stasker;
     //交办时间
     private Date startTime;
+    //紧急程度
+    private String urgency;
     //办理时限
     private Date endTime;
     //事项状态
-    private List<JSONObject> status;
+    private JSONObject status;
 
 }

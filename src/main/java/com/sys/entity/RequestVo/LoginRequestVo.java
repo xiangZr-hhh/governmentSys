@@ -12,5 +12,4 @@ public class LoginRequestVo {
 
     private LoginFormVo loginForm;
 
-
 }

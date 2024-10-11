@@ -1,7 +1,10 @@
 package com.sys.entity.ResponseVo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sys.entity.RequestVo.AttachmentVo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +13,8 @@ import java.util.List;
         张睿相   Java
 */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskContentVo {
 
     //事项ID
@@ -25,25 +30,24 @@ public class TaskContentVo {
     //事项描述
     private String taskDetail;
     //主办单位id
-    private Integer[] mTaskerId;
+    private Integer[] mtaskerid;
     //主办单位名称
-    private List<String> mTasker;
+    private List<String> mtasker;
     //协办单位id数组
-    private Integer[] sTaskerId;
+    private Integer[] staskerid;
     //协办单位名称数组
-    private List<String> sTaske;
+    private List<String> stasker;
     //交办时间
     private Date startTime;
     //办理时限
     private Date endTime;
     //紧急程度
     private String urgency;
-    //备注
-    private String notes;
     //附件
     private List<AttachmentVo> attachment;
-    //流程
-    private List<FlowVo> flow;
+    //状态
+    private JSONObject status;
+
 
 
 

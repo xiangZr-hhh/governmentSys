@@ -2,7 +2,9 @@ package com.sys.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sys.common.ResponseResult;
+import com.sys.entity.RequestVo.ApproveFeedbackVo;
 import com.sys.entity.RequestVo.SubmitRejectTaskVo;
+import com.sys.entity.RequestVo.SubmitResultVO;
 import com.sys.entity.RequestVo.SubmitTaskRequestVo;
 import com.sys.entity.Task;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,32 +51,53 @@ public interface TaskService extends IService<Task> {
 
     ResponseResult getScoreDetail(String beginDate, String endDate, Integer deptId);
 
-    ResponseResult getTaskResultById(Long taskId);
+    ResponseResult getTaskResultById(Integer taskId);
 
-    ResponseResult approveTaskById();
+    ResponseResult approveTaskById(Integer taskId);
 
     ResponseResult approveResultById(Long taskId);
 
     ResponseResult submitRejectTask(SubmitRejectTaskVo submitRejectTaskVo);
 
-    ResponseResult suspentTaskById(Long taskId);
+    ResponseResult suspentTaskById(Integer taskId);
 
     ResponseResult getAllTask(Long userId);
-//
-//    ResponseResult getScoreDetailById(Integer deptId);
-//
-//    ResponseResult getUnclaimedTasks(int userId);
-//
-//    ResponseResult claimTask(Integer userId, Integer taskId);
-//
-//    ResponseResult getUnapprovedTasks(int userId);
-//
-//    ResponseResult getStaffList(int userId);
-//
-//    ResponseResult getClaimedTasks(int userId);
-//
-//    ResponseResult getAssignedTasks(int userId);
-//
-//    ResponseResult getSubmittedTasks(int userId);
+
+    ResponseResult getUnapprovedTasksByUserId(Integer userId);
+
+
+    ResponseResult approveFeedback(ApproveFeedbackVo approveFeedbackVo);
+
+    ResponseResult getApprovedTasksByUserId(Integer userId);
+
+    ResponseResult getDeductedTasks(Integer userId);
+
+    ResponseResult getUnclaimedTasks(Integer userId);
+
+    ResponseResult claimTask(Integer taskId, Integer userId);
+
+    ResponseResult getUnfeedbackTasks(Integer userId);
+
+    ResponseResult getSubmittedTasksByUserId(Integer userId);
+
+    ResponseResult getOverdueTasksByUserId(Integer userId);
+
+    ResponseResult getRejectedTasksByUserId(Integer userId);
+
+    ResponseResult getTaskFlowByUserId(Integer userId, Integer taskId);
+
+    ResponseResult getExportScore(String beginDate, String endDate);
+
+    ResponseResult exportTask(String status);
+
+    ResponseResult getDeptStatus(Integer taskId);
+
+    ResponseResult getAllDeptTasks(Integer userId);
+
+    ResponseResult deleteTask(Integer taskId);
+
+    ResponseResult DeptTaskResult(Integer userId, Integer taskId);
+
+    ResponseResult submitResult(SubmitResultVO submitResultVO);
 }
 

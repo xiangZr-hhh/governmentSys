@@ -115,6 +115,11 @@ public class TaskUtils {
 
     //    字符串转换为数组   "1","2" -->  [1,2]
     public static Integer[] convertToIntArray(String str) {
+
+        if(str == null || str.equals("")){
+            return new Integer[0];
+        }
+
         String[] strArray = new String[0];
         if(str != null) {
             strArray = str.split(",");
@@ -126,7 +131,15 @@ public class TaskUtils {
         return intArray;
     }
 
-
-
+//    转换是否事项重大数据
+    public static String converToStringForIsVip(String isVip){
+        if(isVip.equals("true")){
+            return "是";
+        }
+        if(isVip.equals("false")) {
+            return "否";
+        }
+        return "未知";
+    }
 
 }

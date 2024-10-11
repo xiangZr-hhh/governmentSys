@@ -13,15 +13,16 @@ import java.util.List;
 @Data
 public class ArchiveIdTaskResponseVo {
 
-
+//    事项id
+    private Integer taskId;
 //    事项编号
     private String taskNo;
 //    事项名称
     private String taskName;
 //    主办单位名称
-    private List<String> mTasker;
+    private List<String> mtasker;
     //协办单位名称数组
-    private List<String> sTaske;
+    private List<String> stasker;
 //    办结日期
     private Date completeDate;
 

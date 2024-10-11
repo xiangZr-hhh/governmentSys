@@ -18,4 +18,7 @@ public class LoginResponseVo {
 //    用户身份权限
     private String role;
 
+//    用户部门名称
+    private String deptName;
+
 }

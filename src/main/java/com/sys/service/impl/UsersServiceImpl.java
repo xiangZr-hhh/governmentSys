@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sys.common.ErrorCode;
 import com.sys.common.ResponseResult;
+import com.sys.constant.DeptStateConstant;
 import com.sys.constant.UserRoleConstant;
 import com.sys.constant.UserStateConstant;
+import com.sys.entity.Dept;
 import com.sys.entity.RequestVo.EditUserRequestVo;
 import com.sys.entity.RequestVo.UpdatePWDVo;
 import com.sys.entity.RequestVo.UserVoRequest;
@@ -58,6 +60,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             return ResponseResult.errorResult(ErrorCode.SEARACH_NULL, "用户名错误");
         }
 
+
 //        在建验密码是否正确
         boolean flag = false;
         try {
@@ -75,10 +78,15 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 //        封装返回的vo类
         LoginResponseVo userVo = new LoginResponseVo();
         if (user.getUsername() != null) {
-            userVo.setRealName(user.getUsername());
+            userVo.setRealName(user.getNickname());
         }
         userVo.setUserId(user.getId());
         userVo.setRole(user.getRoleId());
+        if(!user.getRoleId().equals(UserRoleConstant.SYSTEM_MANAGER)) {
+            userVo.setDeptName(deptMapper.selectById(user.getDeptId()).getDeptName());
+        }else {
+            userVo.setDeptName("系统管理员");
+        }
 
 //        返回数据
         return ResponseResult.okResult(userVo);
@@ -95,10 +103,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 //        封装vo类
         List<UserVo> userVos = new ArrayList<>();
         for (Users user : users) {
-            UserVo userVo = new UserVo(user.getId(), user.getUsername(), user.getRoleId());
-            if(user.getPhone() != null){
-                userVo.setPhone(user.getPhone());
+            UserVo userVo = new UserVo(user.getId(), user.getNickname(), user.getRoleId() ,user.getUsername());
+            if(user.getPhone1() != null){
+                userVo.setPhone1(user.getPhone1());
             }
+            if(user.getPhone2() != null){
+                userVo.setPhone2(user.getPhone2());
+            }
+            userVo.setNickname(user.getNickname());
             if(user.getSex() != null){
                 userVo.setSex(user.getSex());
             }
@@ -120,12 +132,28 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             return  ResponseResult.errorResult(ErrorCode.USERNAME_DIPLICATE);
         }
 
-        Users user = new Users(userVoRequest.getName(), userVoRequest.getPhone(), userVoRequest.getDeptId(), userVoRequest.getRole());
+        Users user = new Users(userVoRequest.getName(), userVoRequest.getPhone1(),userVoRequest.getPhone2(), userVoRequest.getDeptId(), userVoRequest.getRole());
+        user.setNickname(userVoRequest.getNickname());
+
+
+//        检测部门id
+        Dept dept = deptMapper.selectById(userVoRequest.getDeptId());
+        if(dept == null || dept.getState().equals(DeptStateConstant.DEPT_IS_DELETE)){
+            return ResponseResult.errorResult(ErrorCode.SEARACH_NULL,"添加用户对应的部门id为空");
+        }
+
 
 //            检测非必要参数sex是否添加
         if (!userVoRequest.getSex().equals("")) {
             user.setSex(userVoRequest.getSex());
         }
+
+
+        ResponseResult result = checkUserRole(userVoRequest.getRole(),userVoRequest.getDeptId());
+        if(result.getCode() != 200 ){
+            return result;
+        }
+
 //            向数据库添加数据
         usersMapper.insert(user);
 
@@ -149,9 +177,21 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
             if (!editUserRequestVo.getSex().equals("")) {
                 user.setSex(editUserRequestVo.getSex());
             }
-            user.setPhone(editUserRequestVo.getPhone());
+            user.setPhone1(editUserRequestVo.getPhone1());
+            user.setPhone2(editUserRequestVo.getPhone2());
+
+            if(!user.getUsername().equals(editUserRequestVo.getName())) {
+                LambdaQueryWrapper<Users> usersLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                usersLambdaQueryWrapper.eq(Users::getUsername, editUserRequestVo.getName());
+                List<Users> users = usersMapper.selectList(usersLambdaQueryWrapper);
+                if(users.size() > 0){
+                    return ResponseResult.errorResult(ErrorCode.USERNAME_DIPLICATE);
+                }
+            }
+
             user.setUsername(editUserRequestVo.getName());
             user.setRoleId(editUserRequestVo.getRole());
+            user.setNickname(editUserRequestVo.getNickname());
 
             int result = usersMapper.updateById(user);
             if (result != 0) {
@@ -182,7 +222,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
 
 
 
-
     //        判断editUserRequestVo参数是否为空
     public boolean judgeEditUser(EditUserRequestVo editUserRequestVo) {
 
@@ -192,11 +231,17 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         if (editUserRequestVo.getRole().equals("")) {
             throw new BusinessException(ErrorCode.DATA_NULL, "role参数为空");
         }
-        if (editUserRequestVo.getPhone().equals("")) {
-            throw new BusinessException(ErrorCode.DATA_NULL, "phone参数为空");
+        if (editUserRequestVo.getPhone1().equals("")) {
+            throw new BusinessException(ErrorCode.DATA_NULL, "phone1参数为空");
+        }
+        if (editUserRequestVo.getPhone2() == null || editUserRequestVo.getPhone2().equals("")) {
+            throw new BusinessException(ErrorCode.DATA_NULL, "phone2参数为空");
         }
         if (editUserRequestVo.getUserId() <= 0) {
             throw new BusinessException(ErrorCode.JSON_ERROR, "userId参数错误");
+        }
+        if (editUserRequestVo.getNickname().equals("")){
+            throw new BusinessException(ErrorCode.DATA_NULL, "nickName参数为空");
         }
 
         return true;
@@ -273,4 +318,88 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
 
+//    检查用户权限
+    public ResponseResult checkUserRole(String roleId,Integer deptId){
+
+        LambdaQueryWrapper<Users> usersWrapper = new LambdaQueryWrapper<>();
+
+
+        LambdaQueryWrapper<Dept> deptLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        deptLambdaQueryWrapper.eq(Dept::getDeptName, "督查室").eq(Dept::getState, DeptStateConstant.DEPT_NORMAL);
+        Dept deptDuCha = deptMapper.selectOne(deptLambdaQueryWrapper);
+
+
+
+        if(roleId.equals(UserRoleConstant.SYSTEM_MANAGER)){
+            usersWrapper.clear();
+            usersWrapper.eq(Users::getRoleId,UserRoleConstant.SYSTEM_MANAGER)
+                    .eq(Users::getState,UserStateConstant.USER_NORMAL);
+
+            List<Users> users = usersMapper.selectList(usersWrapper);
+            if(users.size() == 0){
+                return ResponseResult.okResult();
+            }else {
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"管理员名额已满");
+            }
+        }
+
+        if(roleId.equals(UserRoleConstant.SUPERINTENDENT)){
+            usersWrapper.clear();
+            usersWrapper.eq(Users::getRoleId,UserRoleConstant.SUPERINTENDENT)
+                    .eq(Users::getState,UserStateConstant.USER_NORMAL);
+
+            List<Users> users = usersMapper.selectList(usersWrapper);
+
+//            如果不是添加部门督查部门,抛出异常
+            if(deptDuCha != null && deptId != deptDuCha.getId()){
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"该单位不是督查部门");
+            }
+
+            if(users.size() == 0){
+                return ResponseResult.okResult();
+            }else {
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"督查室单位领导名额已满");
+            }
+
+        }
+
+
+        if(roleId.equals(UserRoleConstant.SUPERVISOR)){
+            //            如果不是添加部门督查部门,抛出异常
+            if(deptDuCha != null && deptId != deptDuCha.getId()){
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"该单位不是督查部门");
+            }
+        }
+
+
+        if(roleId.equals(UserRoleConstant.OFFICE_DIRECTOR)){
+            usersWrapper.clear();
+            usersWrapper.eq(Users::getRoleId,UserRoleConstant.OFFICE_DIRECTOR)
+                    .eq(Users::getDeptId,deptId)
+                    .eq(Users::getState,UserStateConstant.USER_NORMAL);
+
+            List<Users> users = usersMapper.selectList(usersWrapper);
+            if(users.size() == 0){
+                return ResponseResult.okResult();
+            }else {
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"办事单位领导名额已满");
+            }
+        }
+
+        if(roleId.equals(UserRoleConstant.OFFICE_STAFF)){
+            usersWrapper.clear();
+            usersWrapper.eq(Users::getRoleId,UserRoleConstant.OFFICE_STAFF)
+                    .eq(Users::getDeptId,deptId)
+                    .eq(Users::getState,UserStateConstant.USER_NORMAL);
+
+            List<Users> users = usersMapper.selectList(usersWrapper);
+            if(users.size() == 0){
+                return ResponseResult.okResult();
+            }else {
+                return ResponseResult.errorResult(ErrorCode.ROLE_NO_ALLOW,"办事单位执行人名额已满");
+            }
+        }
+
+        return ResponseResult.okResult();
+    }
 }

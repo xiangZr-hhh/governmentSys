@@ -5,12 +5,17 @@ import com.sys.common.ResponseResult;
 import com.sys.entity.RequestVo.*;
 import com.sys.excption.BusinessException;
 import com.sys.service.impl.UsersServiceImpl;
+import com.sys.utils.CookieUtil;
 import com.sys.utils.TaskUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /*
         张睿相   Java
@@ -23,7 +28,10 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseResult login(@RequestBody @Validated LoginRequestVo loginRequestVo, BindingResult bindingResult) {
+    public ResponseResult login(@RequestBody @Validated LoginRequestVo loginRequestVo,
+                                BindingResult bindingResult,
+                                HttpServletRequest request,
+                                HttpServletResponse response) {
 
 // 判断是否有参数错误
         if (bindingResult.hasErrors()) {
@@ -32,6 +40,9 @@ public class UserController {
 
 //        请求登录
         ResponseResult result = usersService.login(loginRequestVo);
+
+        CookieUtil.setCookie(request, response,
+                "Message", "用户已经登录啦,cookie时长一小时", 60*60);
         return result;
     }
 

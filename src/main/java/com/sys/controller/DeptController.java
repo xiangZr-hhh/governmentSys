@@ -27,7 +27,7 @@ public class DeptController {
     private DeptServiceImpl deptService;
 
     /**
-     * @Description: TODO 获取部门列表
+     * @Description: 获取部门列表
      * @Date: 2024/1/2
 
      **/
@@ -37,8 +37,9 @@ public class DeptController {
         return result;
     }
 
+
     /**
-     * @Description: TODO 添加部门
+     * @Description:  添加部门
      * @Date: 2024/1/2
      * @Param addDeptRequestVo:
      **/
@@ -46,11 +47,10 @@ public class DeptController {
     public ResponseResult addDept(@RequestParam String deptName){
 
         if(deptName.equals("")){
-            throw new BusinessException(ErrorCode.DATA_NULL);
+            return ResponseResult.errorResult(ErrorCode.REQUEST_BODY_ERROR);
         }
 
-        ResponseResult result = deptService.addDept(deptName);
-        return result;
+        return deptService.addDept(deptName);
     }
 
 
@@ -60,7 +60,8 @@ public class DeptController {
      * @Param editDeptRequestVo:
      **/
     @PutMapping("/editDept")
-    public ResponseResult editDept(@RequestParam Integer deptId,@RequestParam String newDeptName){
+    public ResponseResult editDept(@RequestParam Integer deptId,
+                                   @RequestParam String newDeptName){
 
         if(deptId <= 0 || newDeptName.equals("")){
             throw new BusinessException(ErrorCode.DATA_NULL);
@@ -82,8 +83,7 @@ public class DeptController {
             throw new BusinessException(ErrorCode.JSON_ERROR);
         }
 
-        ResponseResult result = deptService.delDept(deptId);
-        return result;
+        return deptService.delDept(deptId);
     }
 
 }

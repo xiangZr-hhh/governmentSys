@@ -18,15 +18,20 @@ public class UserVo {
 
     private String name;
 
+    private String nickname;
+
     private String sex;
 
-    private String phone;
+    private String phone1;
+
+    private String phone2;
 
     private String role;
 
-    public UserVo(Integer userId, String name, String role) {
+    public UserVo(Integer userId, String nickname, String role,String username) {
         this.userId = userId;
-        this.name = name;
+        this.nickname = name;
         this.role = role;
+        this.name = username;
     }
 }

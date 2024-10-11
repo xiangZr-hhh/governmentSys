@@ -14,7 +14,11 @@ public enum ErrorCode {
     STATUE_NOT_ALL(4402,"事件状态未统一"),
     STATUE_ERROR(4403,"事件状态错误"),
     REQUEST_BODY_ERROR(4404,"请求参数错误"),
-    PAEEWORD_CONVERSION_ERROR(4405,"密码转换错误");
+    PAEEWORD_CONVERSION_ERROR(4405,"密码转换错误"),
+    ROLE_NO_ALLOW(4406,"权限名额已满"),
+    TASKNO_REPEATE(4407,"事项编号重复"),
+    DEPT_NO_CONTAIN_USER(4408,"部门内无用户"),
+    TOKEN_ERROR(4409,"Token错误"),;
 
     int code;
     String msg;

@@ -1,6 +1,7 @@
 package com.sys.entity.ResponseVo;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.sys.entity.RequestVo.AttachmentVo;
 import lombok.Data;
 
@@ -23,9 +24,9 @@ public class TaskContentNoFlowVo {
     //事项描述
     private String taskDetail;
     //主办单位名称
-    private List<String> mTasker;
+    private List<String> mtasker;
     //协办单位名称数组
-    private List<String> sTaske;
+    private List<String> stasker;
     //交办时间
     private Date startTime;
     //办理时限
@@ -36,8 +37,10 @@ public class TaskContentNoFlowVo {
     private String notes;
     //附件
     private List<AttachmentVo> attachment;
+    //合并状态
+    private String taskStatus;
     //任务状态
-    private String status;
+    private JSONObject status;
 
 
 
